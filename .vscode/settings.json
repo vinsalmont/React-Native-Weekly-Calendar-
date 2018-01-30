@@ -1,0 +1,10 @@
+{
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "path-intellisense.mappings": {
+        "@weekly": "${workspaceRoot}/src",
+        "@images": "${workspaceRoot}/src/assets"
+    },
+    "files.autoSave": "onFocusChange",
+    "editor.insertSpaces": false,
+    "autoimport.useSemiColon": false
+}

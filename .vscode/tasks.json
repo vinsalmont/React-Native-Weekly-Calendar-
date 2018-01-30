@@ -1,0 +1,30 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "taskName": "build",
+            "type": "shell",
+            "command": "npm run build",
+            "problemMatcher": []
+        },
+        {
+            "taskName": "emulator",
+            "type": "shell",
+            "command": "sh -c '${HOME}/Library/Android/sdk/emulator/emulator @$(EMUS=$(${HOME}/Library/Android/sdk/emulator/emulator -list-avds); echo $EMUS | cut -d \" \" -f 1 )'",
+            "isBackground": true,
+            "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "watch",
+            "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "start:android",
+            "problemMatcher": []
+        }
+    ]
+}

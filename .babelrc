@@ -1,0 +1,17 @@
+{
+  "presets": [
+    "react-native"
+  ],
+  "plugins": [
+    ["module-resolver", {
+      "cwd": "babelrc",
+      "@weekly": "./src",
+      "@images": "./src/assets",
+      "alias": {
+        "@weekly": "./artifacts",
+        "@images": "./src/assets"
+      }
+    }]
+  ],
+  "sourceMaps": true
+}
