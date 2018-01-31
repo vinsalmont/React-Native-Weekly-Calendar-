@@ -6,6 +6,7 @@ declare module '@weekly/Weekly' {
 	namespace Weekly {
 		interface State {
 			currentDayEvents: Synced<Weekly.Event[]>
+			creation: Synced<Weekly.Event>
 		}
 	}
 }

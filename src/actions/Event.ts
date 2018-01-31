@@ -1,6 +1,6 @@
 import { Synced } from '@weekly/store/Sync'
 import { Weekly } from '@weekly/Weekly'
-// import { AsyncStorage } from 'react-native'
+import { AsyncStorage } from 'react-native'
 
 export namespace Event {
 	export enum Type {
@@ -16,17 +16,22 @@ export namespace Event {
 		currentDayEvents: Synced<Weekly.Event[]>
 	}
 
-	export function getDayEvents({ _date }: {
-		_date: any,
+	export function getDayEvents({ date }: {
+		date: string,
 	}) {
 		return async function (dispatch) {
 			dispatch({ type: Event.Type.LOADING })
 
 			try {
-				// AsyncStorage.removeItem('user').then(() => {
-				// 	dispatch({ type: Auth.Type.LOGOUT })
-				// })
-				console.log('bla')
+				const previousData = await AsyncStorage.getItem(date)
+				const currentDayEvents = previousData ? await JSON.parse(previousData) : []
+
+				const action: Event.Action = {
+					currentDayEvents,
+					type: Event.Type.GET_EVENTS,
+				}
+
+				dispatch(action)
 			} catch (error) {
 				dispatch({ error, type: Event.Type.ERROR })
 			}

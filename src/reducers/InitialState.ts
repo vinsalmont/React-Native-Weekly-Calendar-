@@ -4,6 +4,7 @@ const none = { syncStatus: SyncStatus.NONE }
 
 const initialState: Weekly.State = {
 	currentDayEvents: none,
+	creation: none,
 }
 
 export default initialState

@@ -23,6 +23,7 @@ interface Props {
 class App extends React.Component<Props> {
 	constructor(props) {
 		super(props)
+		console.disableYellowBox = true
 		this.startApp()
 	}
 

@@ -3,29 +3,44 @@ import {
 	View,
 	StyleSheet,
 	ListView,
+	RefreshControl,
+	Alert,
 } from 'react-native'
 
 import { connect } from 'react-redux'
 
 import { Weekly } from '@weekly/Weekly'
 
-import { Synced } from '@weekly/store/Sync'
+import { Event } from '@weekly/actions/Event'
+
+import { Synced, isSynced, shouldReload } from '@weekly/store/Sync'
+
 import EmptySection from '@weekly/global/Components/EmptySection'
+import EventCell from '@weekly/views/Calendar/EventCell'
+
+import Navigation from '@weekly/global/Navigation'
+import Utils from '@weekly/global/Utils'
 
 import ActionButton from 'react-native-action-button'
 import CalendarStrip from 'react-native-calendar-strip'
 import Icon from 'react-native-vector-icons/Ionicons'
+import Swipeout from 'react-native-swipeout'
 import { ifIphoneX } from 'react-native-iphone-x-helper'
+import { Creation } from '@weekly/actions/Creation'
+
 interface Props {
 	navigator: any
 	currentDayEvents: Synced<Weekly.Event[]>
+	creation: Synced<Weekly.Event>
 	dispatch(action): Promise<void>
 }
 
 interface State {
 	loading: boolean
 	refreshing: boolean
+	portrait: boolean
 	dataSource?: any
+	selectedDate: string
 }
 
 const ds = new ListView.DataSource({
@@ -35,7 +50,9 @@ const ds = new ListView.DataSource({
 function mapStateToProps(state: Weekly.State, props) {
 	return {
 		...props,
+		state,
 		currentDayEvents: state.currentDayEvents,
+		creation: state.creation,
 	}
 }
 
@@ -45,40 +62,100 @@ class Home extends React.Component<Props, State> {
 	constructor(props) {
 		super(props)
 
+		const currentDate = new Date()
+
 		this.state = {
 			refreshing: false,
 			loading: false,
+			portrait: true,
 			dataSource: ds.cloneWithRows([]),
+			selectedDate: Utils.formatDate(currentDate),
 		}
 	}
 
 	componentDidMount() {
-		//
+		const date = new Date()
+		const formated = Utils.formatDate(date)
+		this.loadData(formated)
 	}
 
-	componentWillReceiveProps(_nextProps) {
-		//
+	componentWillReceiveProps(nextProps) {
+
+		if (this.props.currentDayEvents !== nextProps.currentDayEvents) {
+			if (isSynced(nextProps.currentDayEvents)) {
+				this.setState({
+					dataSource: ds.cloneWithRows(nextProps.currentDayEvents),
+				})
+			}
+		}
+
+		if (this.props.creation !== nextProps.creation) {
+			if (shouldReload(nextProps.creation)) {
+				this.props.dispatch({ type: Creation.Type.NONE })
+				this.onRefresh()
+			}
+		}
 	}
 
-	loadData() {
+	loadData(date) {
 		this.setState({ loading: true })
-		// dispatch
+		this.props.dispatch(Event.getDayEvents({
+			date,
+		})).then(() => {
+			this.setState({ refreshing: false, loading: false })
+		})
 	}
 
 	onRefresh() {
 		this.setState({ refreshing: true })
-		this.loadData()
+		this.loadData(this.state.selectedDate)
 	}
 
-	renderRow(_bject) {
-		// const _event = object as Weekly.Event
+	selectDate(date) {
+		const formatedDate = Utils.formatDate(date)
+		this.setState({ selectedDate: formatedDate })
+		this.loadData(formatedDate)
+	}
+
+	removeEvent(event) {
+		Alert.alert('Warning', 'Do you really want to remove this event? This action cannot be undone.',
+			[
+				{
+					text: 'No',
+				},
+				{
+					text: 'Yes', onPress: () => {
+						this.props.dispatch(Creation.remove({
+							event,
+						})).then((() => {
+							this.props.dispatch({ type: Creation.Type.RELOAD })
+						}).bind(this))
+					},
+				}],
+			{ cancelable: false },
+		)
+	}
+
+	renderRow(object) {
+		const event = object as Weekly.Event
+
+		const swipeBtns = [{
+			text: 'Delete',
+			backgroundColor: 'red',
+			underlayColor: 'red',
+			onPress: () => { this.removeEvent(event) },
+		}]
+
 		return (
-			// <Card
-			// 	user={user}
-			// 	product={product}
-			// 	showDetails={(prod) => this.showDetails(prod)}
-			// />
-			<View></View>
+			<Swipeout
+				right={swipeBtns}
+				backgroundColor='transparent'
+				autoClose={true}
+			>
+				<EventCell
+					event={event}
+				/>
+			</Swipeout>
 		)
 	}
 
@@ -91,12 +168,12 @@ class Home extends React.Component<Props, State> {
 					dataSource={this.state.dataSource}
 					renderRow={(data) => this.renderRow(data)}
 					removeClippedSubviews={true}
-				// refreshControl={
-				// 	<RefreshControl
-				// 		refreshing={this.state.refreshing}
-				// 		onRefresh={this.onRefresh.bind(this)}
-				// 	/>
-				// }
+					refreshControl={
+						<RefreshControl
+							refreshing={this.state.refreshing}
+							onRefresh={this.onRefresh.bind(this)}
+						/>
+					}
 				/>
 			)
 		} else {
@@ -118,14 +195,14 @@ class Home extends React.Component<Props, State> {
 					dateNumberStyle={calendarStripStyles.dateNumber}
 					dateNameStyle={calendarStripStyles.dateName}
 					iconContainer={calendarStripStyles.iconContainer}
-					numDaysInWeek={5}
 					maxDayComponentSize={50}
+					onDateSelected={(date) => this.selectDate(date)}
 				/>
 
 				{this.renderList(this.state.dataSource.getRowCount() > 0)}
 
 				<ActionButton buttonColor='rgba(231,76,60,1)'>
-					<ActionButton.Item buttonColor='#1abc9c' title='New Event' onPress={() => { }}>
+					<ActionButton.Item buttonColor='#1abc9c' title='New Event' onPress={() => Navigation.push(this.props.navigator, 'event.Form', 'Create Event')} >
 						<Icon name='md-create' style={styles.actionButtonIcon} />
 					</ActionButton.Item>
 				</ActionButton>
@@ -161,7 +238,7 @@ const calendarStripStyles = StyleSheet.create({
 		color: '#053D4E',
 	},
 	iconContainer: {
-		flex: 0.1 ,
+		flex: 0.1,
 	},
 })
 
