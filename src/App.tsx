@@ -11,6 +11,7 @@ import { Weekly } from '@weekly/Weekly'
 import { registerScreens } from '@weekly/screens'
 import initialState from '@weekly/reducers/InitialState'
 import { configureStore } from '@weekly/store/ConfigureStore'
+import { Platform } from 'react-native';
 
 export const weeklyStore = configureStore(initialState)
 registerScreens(weeklyStore, Provider)
@@ -23,6 +24,7 @@ interface Props {
 class App extends React.Component<Props> {
 	constructor(props) {
 		super(props)
+		console.disableYellowBox = true
 		this.startApp()
 	}
 
@@ -34,18 +36,18 @@ class App extends React.Component<Props> {
 				navigatorButtons: {},
 			},
 			appStyle: {
-				statusBarColor: '#FAFAFA',
-				statusBarTextColorScheme: 'light',
 				navBarTextColor: 'white',
 				navBarButtonColor: 'white',
-				topBarElevationShadowEnabled: false,
-				borderBottomColor: 'transparent',
 				navBarNoBorder: true,
-				screenBackgroundColor: 'white',
-				hideBackButtonTitle: true,
 				drawUnderNavBar: true,
-				navBarTranslucent: true,
-				navBarTransparent: true,
+				navBarBlur: false,
+				navBarBackgroundColor: Platform.OS === 'ios' ? 'transparent' : '#064783',
+				navBarTranslucent: Platform.OS === 'ios' ? true : false,
+				navBarTransparent: Platform.OS === 'ios' ? true : false,
+				statusBarColor: '#FAFAFA',
+				statusBarTextColorScheme: 'dark',
+				hideBackButtonTitle: true,
+				topBarElevationShadowEnabled: false,
 			},
 			passProps: {},
 			animationType: 'slide-down',

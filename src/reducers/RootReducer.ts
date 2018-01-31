@@ -2,8 +2,10 @@ import { Weekly } from '@weekly/Weekly';
 import { AnyAction, combineReducers } from 'redux'
 
 import eventReducer from '@weekly/reducers/Event'
+import creationReducer from '@weekly/reducers/Creation'
 
 const combinedReducer = combineReducers<Weekly.State>({
+	creation: creationReducer,
 	currentDayEvents: eventReducer,
 })
 
