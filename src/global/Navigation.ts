@@ -1,13 +1,19 @@
 import { Navigation } from 'react-native-navigation'
+import { Platform } from 'react-native'
 
 namespace Navigation {
 	const navigatorStyle = {
-		// navBarTextColor: 'white',
-		// navBarButtonColor: 'white',
-		// drawUnderNavBar: true,
-		// navBarTranslucent: true,
-		// navBarTransparent: true,
-		// tabBarHidden: true,
+		navBarTextColor: '#053D4E',
+		navBarButtonColor: '#053D4E',
+		navBarNoBorder: true,
+		drawUnderNavBar: true,
+		navBarBlur: false,
+		navBarBackgroundColor: Platform.OS === 'ios' ? 'transparent' : '#FAFAFA',
+		navBarTranslucent: Platform.OS === 'ios' ? true : false,
+		navBarTransparent: Platform.OS === 'ios' ? true : false,
+		statusBarColor: '#FAFAFA',
+		hideBackButtonTitle: true,
+		topBarElevationShadowEnabled: false,
 	}
 
 	export function push(navigator, screen, title?, props?, navStyle?) {

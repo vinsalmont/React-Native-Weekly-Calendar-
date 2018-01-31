@@ -5,6 +5,7 @@ import {
 	ListView,
 	RefreshControl,
 	Alert,
+	Platform,
 } from 'react-native'
 
 import { connect } from 'react-redux'
@@ -25,7 +26,6 @@ import ActionButton from 'react-native-action-button'
 import CalendarStrip from 'react-native-calendar-strip'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Swipeout from 'react-native-swipeout'
-import { ifIphoneX } from 'react-native-iphone-x-helper'
 import { Creation } from '@weekly/actions/Creation'
 
 interface Props {
@@ -58,6 +58,10 @@ function mapStateToProps(state: Weekly.State, props) {
 
 @connect(mapStateToProps)
 class Home extends React.Component<Props, State> {
+
+	static navigatorStyle = {
+		navBarHidden: true,
+	}
 
 	constructor(props) {
 		super(props)
@@ -251,11 +255,7 @@ const styles = StyleSheet.create({
 		paddingTop: 10,
 		paddingBottom: 20,
 		paddingHorizontal: 10,
-		...ifIphoneX({
-			marginBottom: 84,
-		}, {
-				marginBottom: 50,
-			}),
+		marginLeft: Platform.OS === 'ios' ? 0 : 20,
 	},
 	actionButtonIcon: {
 		fontSize: 20,

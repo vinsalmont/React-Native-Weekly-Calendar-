@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -49,7 +50,6 @@
 		CE3EA9A346024073A5B2C088 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B93C4FCE034433192E16E68 /* FontAwesome.ttf */; };
 		EF762EA625B24117A0D73095 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FF66E1170C814166B61B9D53 /* SimpleLineIcons.ttf */; };
 		F30DFD9AD6FD4BAF9E7F6900 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D05CE9E39CD0445592443314 /* Feather.ttf */; };
-		FC50B203956F46E18B2934AB /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B33DCA757074FE791D2A522 /* libRCTOrientation.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -409,7 +409,6 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				BA09CD453DFD4AA9B17797CF /* libReactNativeNavigation.a in Frameworks */,
 				6AA18706F983408FB0E4D47E /* libRNVectorIcons.a in Frameworks */,
-				FC50B203956F46E18B2934AB /* libRCTOrientation.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
